@@ -379,9 +379,88 @@
                 this.skuPropertiesDialogVisible = true;
 			},
 			//上架
-            handleOnSale(){},
+            handleOnSale(){
+                if(this.sels.length<=0){
+                    this.$message({
+						message:"至少选中一行执行上架操作!",
+						type:"warning"
+					})
+					return;
+				}
+				//执行上架操作
+                this.$confirm('确认上架这些商品吗?', '提示', {
+                    type: 'warning'
+                }).then(() => {
+                    //获取到选中的商品id
+                    var ids = this.sels.map(item => item.id).toString();
+                    //发送请求
+                    this.$http.get("/product/product/onSale",{
+                        params:{
+                            ids:ids
+                        }
+                    }).then(res=>{
+                        if(res.data.success){
+                            this.$message({
+                                message:"上架成功!",
+                                type:"success"
+                            })
+                            //重新加载table
+                            this.getProducts();
+                        }else{
+                            this.$message({
+                                message:res.data.message,
+                                type:"error"
+                            })
+                        }
+                    })
+                }).catch(() => {
+
+                });
+
+
+
+
+
+			},
 			//下架
-            handleOffSale(){},
+            handleOffSale(){
+                if(this.sels.length<=0){
+                    this.$message({
+                        message:"至少选中一行执行下架操作!",
+                        type:"warning"
+                    })
+                    return;
+                }
+                //执行上架操作
+                this.$confirm('确认下架这些商品吗?', '提示', {
+                    type: 'warning'
+                }).then(() => {
+                    //获取到选中的商品id
+                    var ids = this.sels.map(item => item.id).toString();
+                    //发送请求
+                    this.$http.get("/product/product/offSale",{
+                        params:{
+                            ids:ids
+                        }
+                    }).then(res=>{
+                        if(res.data.success){
+                            this.$message({
+                                message:"下架成功!",
+                                type:"success"
+                            })
+                            //重新加载table
+                            this.getProducts();
+                        }else{
+                            this.$message({
+                                message:res.data.message,
+                                type:"error"
+                            })
+                        }
+                    })
+                }).catch(() => {
+
+                });
+			},
             handleSuccessImg(response, file, fileList){
                 let fileId = response.restObj;//从响应中获取到fileId
                 this.mediasList = fileList;
